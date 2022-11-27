@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %} {% endblock %}
+{% block content %}
+<div class="container d-flex rounded border">
+    <div class="col my-auto">
+
+
+    <strong class="text-success fw-bold  heading-text h1">{{ database_detail.name }}</strong>
+    <h4> Items : {{ database_detail.count }}</h4>
+    <p>
+        Açıklama :
+        <code>
+            None
+        </code>
+    </p>
+    </div>
+    <ul class="col-lg-6 col-sm-6 mt-2 row list-group-horizontal-sm overflow-auto " style="height: 14vh">
+    {% for tag_key,tag_value in database_detail.tag.items %}
+        <li class="border list-group-item ps-2">
+            <tr>
+                <td>{{ tag_key }} </td>
+                <td>{{ tag_value }}</td>
+            </tr>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+    <hr class="container">
+<div class="container overflow-auto" style="height: 60vh">
+<table class="table table-sm table-light table-striped ">
+{#    {{ data_list.get_comments }}#}
+    {% for data in data_list.get_comments %}
+        {% if forloop.counter0 == 0 %}
+            <thead>
+                <tr>
+            <th scope="col">Row</th>
+            {% for key, value in data.get_variables.items %}
+                {% if key not in '["tag","modifiedBy","tag_id","id"]' %}
+                    <th scope="col">{{ key }}</th>
+                {% endif %}
+            {% endfor %}
+                <th scope="col">Tag</th>
+                <th scope="col">Actions</th>
+                </tr>
+            </thead>
+        <tbody>
+        {% endif %}
+            <tr>
+            <td class="border text-secondary">{{ data.id }}</td>
+            {% for key, value in data.get_variables.items %}
+                {% if key not in '["tag","modifiedBy","tag_id","id"]' %}
+                    {% if forloop.counter0 == 0 %}
+                        <th scope="row">{{ value }}</th>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <td class="border">
+                {{ data.modifiedBy.user.name }}
+            </td>
+
+            <td class="border">
+                <select id="{{ data.get_tag.id }}" class="form-select form-select-sm" style="min-width: 100px" onchange='set_and_update_tag(id=this.id,this.value)'>
+                    {% if data.tag %}
+                        <option class="text-success fw-semibold" value="-1">{{ data.tag }}</option>
+                    {% else %}
+                        <option class="text-danger" value="-1">---TAG---</option>
+                    {% endif %}
+                    {% for tag in tag_list %}
+                         <option>{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td class="border" >
+                <div class="d-flex">
+                    <button class="btn btn-light" onclick=''><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="btn btn-light"><i class="fa-regular fa-eye"></i></button>
+                    <button class="btn btn-light"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <h2>Alert : (debug on data temp) : data yok</h2>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+    <hr class="container">
+<div class="container clearfix">
+
+<div class="float-start">
+    <div class="overflow-auto" style="width: 500px;height: 8vh">
+        <div class="m-0 p-0" id="log">None</div>
+    </div>
+</div>
+    <button class="btn btn-primary float-end ms-2">Veriyi cvs olarak al</button>
+    <button class="btn btn-success float-end ms-2">Veriyi json olarak al</button>
+    <button class="btn btn-danger float-end ms-2">Veriyi db olarak al</button>
+</div>
+    <hr class="container">
+<div class="container text-center mb-2"><strong>F4ruk</strong></div>
+<script>
+function set_and_update_tag(id,tag){
+    var apiUrl = window.location.href.toString() + '/set_tag/'+ id
+    var logBar = document.getElementById('log')
+    $.ajax(
+    {
+    url: apiUrl,
+    type:"POST",
+    dataType: 'json',
+        data:{'csrfmiddlewaretoken':'{{ csrf_token }}','tag':tag},
+    success:function (response) {
+            logBar.innerHTML += response.message.toString() + "<br>"
+    },
+    error: function(response){
+        logBar.innerHTML += response.message.toString() + "<br>"
+    }
+    })
+
+    logBar.scrollTop = logBar.scrollHeight
+    {#logBar#}
+}
+
+</script>
+{% endblock %}

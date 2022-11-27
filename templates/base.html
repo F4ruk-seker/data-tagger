@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="tr">
+{% include 'statics.html' %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    {% include 'page_loader.html' %}
+    {% if user.is_authenticated %}
+        {% include 'navbar.html' %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</body>
+</html>

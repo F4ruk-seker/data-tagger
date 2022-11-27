@@ -61,7 +61,7 @@ class LoginView(View):
             )
             if user:
                 login(request,user)
-                return HttpResponse('data  Sayfası gelcek')
+                return redirect('Data:data_list')
             else:
                 messages.error(request, "login error")
                 return redirect("Auth:login")

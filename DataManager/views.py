@@ -37,8 +37,6 @@ def set_data_tag(request,_id:str,id:int):
     if request.user.is_authenticated:
         if request.method == 'POST':
             try:
-
-                print('sad')
                 return JsonResponse({"success":True,"message":f"{_id} |-> {None.get('name')}"})
             # else:
             #     raise Http404(json.dumps({"success":False,"message":f"Tag 404 {request.POST.get('tag')}"}))

@@ -10,9 +10,16 @@ class Comment(models.Model):
     modified_by = models.ForeignKey('Account.CustomUserModel',on_delete=models.SET_NULL,default=None,null=True)
     last_update = models.DateTimeField(auto_now=True)
 
+    delete = models.BooleanField(default=False)
 
     def get_variables(self):
         return {
             'comment':self.comment,
             'rate':self.rate,
+            'modified_by':self.modified_by
         }
+    # def get_tag(self):
+    #     if self.tag == None:
+    #         return None
+    #     else:
+    #         return self.tag

@@ -6,11 +6,11 @@
 
 
     <strong class="text-success fw-bold  heading-text h1">{{ database_detail.name }}</strong>
-    <h4> Items : {{ database_detail.count }}</h4>
+    <h4> Items : {{ database_detail.get_comment_count }}</h4>
     <p>
         Açıklama :
         <code>
-            None
+            {{ database_detail.explanation }}
         </code>
     </p>
     </div>
@@ -25,11 +25,22 @@
     {% endfor %}
     </ul>
 </div>
-    <hr class="container">
+<div class="container d-flex p-0">
+    <hr class="w-100 me-2">
+    <input type="checkbox" id="show_deleted" onchange="if(window.location.href.endsWith('?show_deleted=true')){window.location.replace(window.location.href.toString().replace('?show_deleted=true',''));}else{document.getElementById('show_deleted_comments').click()}">
+    <label class="d-block my-auto ps-2" style="min-width: 112px" for="show_deleted">Show Deleted</label>
+    <a style="display: none" href="/?show_deleted=true" id="show_deleted_comments"></a>
+    <script>
+        if (window.location.href.endsWith('?show_deleted=true')){
+            document.getElementById('show_deleted').checked = true;
+        }
+        document.getElementById('show_deleted_comments').href = window.location.href + '?show_deleted=true'
+    </script>
+</div>
 <div class="container overflow-auto" style="height: 60vh">
 <table class="table table-sm table-light table-striped ">
 {#    {{ data_list.get_comments }}#}
-    {% for data in data_list.get_comments %}
+    {% for data in data_list %}
         {% if forloop.counter0 == 0 %}
             <thead>
                 <tr>
@@ -46,8 +57,10 @@
             </thead>
         <tbody>
         {% endif %}
-            <tr>
+            <tr id="dataRow{{ data.id }}">
+
             <td class="border text-secondary">{{ data.id }}</td>
+{#            <td class="border text-secondary">{{ data.modified_by }}</td>#}
             {% for key, value in data.get_variables.items %}
                 {% if key not in '["tag","modified_by","tag_id","id"]' %}
                     {% if forloop.counter0 == 0 %}
@@ -58,9 +71,9 @@
                 {% endif %}
             {% endfor %}
             <td class="border">
-                {% if data.modified_by %}
+                {% if data.modified_by.id %}
                     <div id="modBy{{ data.id }}">
-                        <a class="link-dark fw-semibold text-decoration-none">{{ data.modified_by }}</a>
+                        <a class="link-dark fw-semibold text-decoration-none">{{ data.get_variables.modified_by }}</a>
                     </div>
                 {% else %}
                     <div id="modBy{{ data.id }}">
@@ -83,9 +96,8 @@
             </td>
             <td class="border" >
                 <div class="d-flex">
-                    <button class="btn btn-light" onclick=''><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="btn btn-light"><i class="fa-regular fa-eye"></i></button>
-                    <button class="btn btn-light"><i class="fa-solid fa-trash"></i></button>
+                    <a class="btn btn-light" href="{% url 'Data:comment_edit' data.id %}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <button class="btn btn-light" onclick="remove_comment('{{ data.id }}')"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </td>
         </tr>
@@ -103,15 +115,21 @@
         <div class="m-0 p-0" id="log">None</div>
     </div>
 </div>
-    <button class="btn btn-primary float-end ms-2">Veriyi cvs olarak al</button>
-    <button class="btn btn-success float-end ms-2">Veriyi json olarak al</button>
-    <button class="btn btn-danger float-end ms-2">Veriyi db olarak al</button>
+    <a class="btn btn-secondary float-end ms-2" href="{% url 'Data:download_data' database_detail.slug 'xlsx' %}">Veriyi excel olarak al</a>
+    <a class="btn btn-success float-end ms-2" href="{% url 'Data:download_data' database_detail.slug 'json' %}">Veriyi json olarak al</a>
 </div>
     <hr class="container">
 <div class="container text-center mb-2"><strong>F4ruk</strong></div>
 <script>
 function set_and_update_tag(id,tag){
-    var apiUrl = window.location.href.toString() + '/set_tag/'+ id
+    var apiUrl = "";
+    var url = window.location.href.toString().replace('?show_deleted=true','')
+    if (url.endsWith('/')){
+         apiUrl = url + 'set_tag/'+ id
+    }else {
+         apiUrl = url + '/set_tag/'+ id
+
+    }
     var logBar = document.getElementById('log')
     var updater_field = document.getElementById('modBy'+id)
     updater_field.innerHTML = `<p class="link-danger">ON CHANGE</p>`;
@@ -138,5 +156,35 @@ function set_and_update_tag(id,tag){
 </script>
 <script>
 
+function remove_comment(id){
+    var apiUrl = "";
+    var url = window.location.href.toString().replace('?show_deleted=true','')
+    if (url.endsWith('/')){
+         apiUrl = url + 'delete_comment'
+    }else {
+         apiUrl = url + '/delete_comment'
+
+    }
+
+    console.log(apiUrl)
+    var logBar = document.getElementById('log')
+
+    $.ajax({
+    url: apiUrl,
+    type:"POST",
+    dataType: 'json',
+        data:{'csrfmiddlewaretoken':'{{ csrf_token }}','comment':id},
+    success:function (response) {
+        logBar.innerHTML += response.message.toString() + "<br>"
+        $('#'+'dataRow'+id).fadeOut('slow')
+    },
+    error: function(response){
+        logBar.innerHTML += response.message.toString() + "<br>"
+    }
+    })
+
+    logBar.scrollTop = logBar.scrollHeight
+    {#logBar#}
+}
 </script>
 {% endblock %}

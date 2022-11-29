@@ -5,6 +5,9 @@ class Comment(models.Model):
     rate = models.IntegerField(null=True)
     tag = models.ForeignKey('Tag',null=True,on_delete=models.SET_NULL,default=None)
     modified_by = models.ForeignKey('Account.CustomUserModel',on_delete=models.SET_NULL,default=None,null=True)
+    last_update = models.DateTimeField(auto_now=True)
+
+
     def get_variables(self):
         return {
             'comment':self.comment,

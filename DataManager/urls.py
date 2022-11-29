@@ -6,5 +6,5 @@ urlpatterns = [
 
     path('',AllData.as_view(),name='data_list'),
     path('<slug:slug>',get_data_detail_from_name,name='data_detail'),
-    path('<str:name>/set_tag/<str:_id>',set_data_tag,name='data_tag'),
+    path('<slug:slug>/set_tag/<str:comment_id>',set_data_tag,name='data_tag'),
 ]

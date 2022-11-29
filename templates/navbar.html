@@ -1,7 +1,7 @@
 <header class="navbar navbar-expand-lg navbar-dark bd-navbar bg-dark sticky-top">
     <nav class="navbar container-xxl navbar-dark bg-dark">
         <div>
-            <h1 class="text-success">Data Tagger</h1>
+            <h1><a class="text-decoration-none link-success" href="{% url 'Data:data_list' %}">Data Tagger</a></h1>
         </div>
         <div class="text-light d-flex">
 
@@ -13,7 +13,6 @@
                 {% csrf_token %}
                 <button class="btn btn-light rounded-circle" type="submit" ><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
             </form>
-
         </div>
     </nav>
 </header>

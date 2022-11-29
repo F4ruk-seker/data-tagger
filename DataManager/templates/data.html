@@ -33,15 +33,15 @@
         {% if forloop.counter0 == 0 %}
             <thead>
                 <tr>
-            <th scope="col">Row</th>
-            {% for key, value in data.get_variables.items %}
-                {% if key not in '["tag","modified_by","tag_id","id"]' %}
-                    <th scope="col">{{ key }}</th>
-                {% endif %}
-            {% endfor %}
-                <th scope="col">modifiedBy</th>
-                <th scope="col">Tag</th>
-                <th scope="col">Actions</th>
+                <th scope="col">Row</th>
+                {% for key, value in data.get_variables.items %}
+                    {% if key not in '["tag","modified_by","tag_id","id"]' %}
+                        <th scope="col">{{ key }}</th>
+                    {% endif %}
+                {% endfor %}
+                    <th scope="col">modifiedBy</th>
+                    <th scope="col">Tag</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
         <tbody>
@@ -59,21 +59,21 @@
             {% endfor %}
             <td class="border">
                 {% if data.modified_by %}
-                    <a class="link-dark fw-semibold text-decoration-none">{{ data.modified_by }}</a>
+                    <a class="link-dark fw-semibold text-decoration-none" id="modBy{{ data.id }}">{{ data.modified_by }}</a>
                 {% else %}
-                    <p class="text-secondary">None</p>
+                    <p class="text-secondary" id="modBy{{ data.id }}">None</p>
                 {% endif %}
             </td>
 
             <td class="border">
-                <select id="{{ data.get_tag.id }}" class="form-select form-select-sm" style="min-width: 100px" onchange='set_and_update_tag(id=this.id,this.value)'>
+                <select id="{{ data.id }}"  class="form-select form-select-sm" style="min-width: 100px" onchange='set_and_update_tag(id=this.id,this.value)'>
                     {% if data.tag %}
                         <option class="text-success fw-semibold" value="-1">{{ data.tag }}</option>
                     {% else %}
                         <option class="text-danger" value="-1">---TAG---</option>
                     {% endif %}
                     {% for tag in tag_list %}
-                         <option>{{ tag.name }}</option>
+                         <option id="test" value="{{ tag.id }}">{{ tag.name }}</option>
                     {% endfor %}
                 </select>
             </td>
@@ -109,6 +109,7 @@
 function set_and_update_tag(id,tag){
     var apiUrl = window.location.href.toString() + '/set_tag/'+ id
     var logBar = document.getElementById('log')
+    var updater_field = document.getElementById('modBy'+id)
     $.ajax(
     {
     url: apiUrl,
@@ -116,7 +117,8 @@ function set_and_update_tag(id,tag){
     dataType: 'json',
         data:{'csrfmiddlewaretoken':'{{ csrf_token }}','tag':tag},
     success:function (response) {
-            logBar.innerHTML += response.message.toString() + "<br>"
+        updater_field.innerText = response.update_by.toString()
+        logBar.innerHTML += response.message.toString() + "<br>"
     },
     error: function(response){
         logBar.innerHTML += response.message.toString() + "<br>"

@@ -5,9 +5,10 @@ from django.http import JsonResponse
 from django.views.generic import View
 
 from pymongo.collection import ObjectId
-
+from django.db.models import Q
 from DataManager.models import Reviews
 from DataManager.models import Tag
+from DataManager.models import Comment
 
 
 import json
@@ -26,6 +27,7 @@ def get_data_detail_from_name(request,slug):
     if request.user.is_authenticated:
         try:
             data_list = Reviews.objects.get(slug=slug)
+            print(data_list)
             return render(request,template_name='data.html',context={'database_detail':None,'data_list':data_list,'tag_list':Tag.objects.all()})
         except Exception as e:
             print(f'except from data view {e}' )
@@ -33,15 +35,24 @@ def get_data_detail_from_name(request,slug):
     else:
         return redirect('Auth:login')
 
-def set_data_tag(request,_id:str,id:int):
+def set_data_tag(request,slug:str,comment_id):
     if request.user.is_authenticated:
         if request.method == 'POST':
             try:
-                return JsonResponse({"success":True,"message":f"{_id} |-> {None.get('name')}"})
-            # else:
-            #     raise Http404(json.dumps({"success":False,"message":f"Tag 404 {request.POST.get('tag')}"}))
+                tag_id = request.POST.get('tag')
+                tag = Tag.objects.get(id=tag_id)
+                if tag_id and tag:
+                    comment = Comment.objects.get(id=comment_id)
+                    comment.tag = tag
+                    comment.modified_by = request.user
+                    comment.save()
 
-            except:
+                    return JsonResponse({"success":True,"message":f"Row : {comment.id} |-> {tag.name}","update_by":request.user.username})
+                else:
+                    raise Http404(json.dumps({"success":False,"message":f"Tag 404 {request.POST.get('tag')}"}))
+
+            except Exception as er:
+                print(er)
                 raise Http404('document not found')
     else:
         return redirect('Auth:login')

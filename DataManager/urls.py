@@ -1,6 +1,5 @@
 from django.urls import path
 from DataManager.views import AllData,get_data_detail_from_name,set_data_tag,CommentEdit
-from DataManager.consumers import DataSocket
 app_name = "Data"
 urlpatterns = [
 

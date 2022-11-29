@@ -27,12 +27,6 @@ class Logout(View):
 
 db = None
 class LoginView(View):
-    @staticmethod
-    def get_user_from_token(token):
-        try:
-            return AuthToken.objects.get(token=token).user
-        except:
-            pass
 
     def get(self,request):
         if request.user.is_authenticated:
@@ -40,15 +34,19 @@ class LoginView(View):
             return redirect('Data:data_list')
         else:
             token = request.GET.get('AuthToken')
-            user = self.get_user_from_token(token)
-            if token and user:
-                login(request,user)
-                return redirect('Data:data_list')
-
-            response = render(request, template_name='login.html')
-            # response.delete_cookie('pars_session')
-            return response
-
+            if token:
+                try:
+                    _token = AuthToken.objects.get(token=token)
+                    if _token:
+                        meta = request.META
+                        _token.usage = f"{meta.get('REMOTE_ADDR')},"
+                        _token.save()
+                        login(request,_token.user)
+                        return redirect('Data:data_list')
+                except:
+                    return render(request, template_name='login.html')
+            else:
+                return render(request, template_name='login.html')
 
     def post(self,request):
         form = user_login_form(request.POST or None)

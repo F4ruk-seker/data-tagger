@@ -16,7 +16,7 @@ db = None
 class AllData(View):
     def get(self,request):
         if request.user.is_authenticated:
-            data_list = Reviews.objects.values()
+            data_list = Reviews.objects.all()
             return render(request,template_name='view_all_data.html',context={'data_list':data_list})
         else:
             return redirect('Auth:login')

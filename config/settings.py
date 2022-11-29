@@ -20,8 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Encode password into a readable utf-8 byte code:
 
-
-
 env = environ.Env()
 
 environ.Env.read_env(os.path.join(BASE_DIR,'.env'))

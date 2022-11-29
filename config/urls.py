@@ -6,4 +6,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('Auth.urls','Auth')),
     path('data/',include('DataManager.urls','Data')),
+
 ]

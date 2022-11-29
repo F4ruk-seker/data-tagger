@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %} comment {% endblock %}
+{% block content %}
+    <div class="container">
+    <h4>Comment id 25</h4>
+    <hr>
+    {% load crispy_forms_tags %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <hr>
+        <button class="btn btn-primary">SAVE</button>
+    </form>
+    </div>
+{% endblock %}

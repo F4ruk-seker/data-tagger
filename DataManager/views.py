@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.shortcuts import Http404
 from django.http import JsonResponse
 from django.views.generic import View
+from django.views.generic import UpdateView
 
 from pymongo.collection import ObjectId
 from django.db.models import Q
@@ -10,7 +11,7 @@ from DataManager.models import Reviews
 from DataManager.models import Tag
 from DataManager.models import Comment
 
-
+from DataManager.forms import CommentUpdateForm
 import json
 from config.core.SessionConroller import get_auth_user
 db = None
@@ -57,3 +58,26 @@ def set_data_tag(request,slug:str,comment_id):
     else:
         return redirect('Auth:login')
     raise Http404
+
+def CommentEdit(request,slug,comment_id):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                comment = Comment.objects.get(id=comment_id)
+                form = CommentUpdateForm(request.POST or None,instance=comment)
+                if form.is_valid():
+                    form.save()
+                    return render(request,'edit_comment.html',context={'form':form})
+                else:Http404('save fail')
+            except Exception as er:
+                print(er)
+                raise Http404('document not found')
+        else:
+            try:
+                comment = Comment.objects.get(id=comment_id)
+                form = CommentUpdateForm(instance=comment)
+                return render(request,'edit_comment.html',context={'form':form})
+            except:
+                raise Http404('document not found')
+    else:
+        return redirect('Auth:login')

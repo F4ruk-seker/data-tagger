@@ -18,8 +18,6 @@ class Comment(models.Model):
             'rate':self.rate,
             'modified_by':self.modified_by
         }
-    # def get_tag(self):
-    #     if self.tag == None:
-    #         return None
-    #     else:
-    #         return self.tag
+
+    def __str__(self):
+        return f'{self.comment[:150]}...'

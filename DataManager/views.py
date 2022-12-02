@@ -1,5 +1,5 @@
 import os
-
+from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import Http404
@@ -7,14 +7,15 @@ from django.shortcuts import Http404
 from django.http import JsonResponse, StreamingHttpResponse, HttpResponseNotFound, HttpResponse
 from django.views.generic import View
 from django.views.generic import UpdateView
+from django.views.generic import DeleteView
 
-from pymongo.collection import ObjectId
 from django.db.models import Q
 from DataManager.models import Reviews
 from DataManager.models import Tag
 from DataManager.models import Comment
 from config.settings import BASE_DIR
 from DataManager.forms import CommentUpdateForm
+from DataManager.forms import TagForm
 import json
 from config.core.SessionConroller import get_auth_user
 
@@ -22,7 +23,8 @@ class AllData(View):
     def get(self,request):
         if request.user.is_authenticated:
             data_list = Reviews.objects.all()
-            return render(request,template_name='view_all_data.html',context={'data_list':data_list})
+            tag_list = Tag.objects.all()
+            return render(request,template_name='view_all_data.html',context={'data_list':data_list,'tag_list':tag_list})
         else:
             return redirect('Auth:login')
 
@@ -148,3 +150,57 @@ def download_data(request,slug,data_type):
         print(e)
         raise Http404
     return response
+
+
+class TagEdit(View):
+    @staticmethod
+    def get_tag_from_id(id):
+        try:
+            return Tag.objects.get(id=id)
+        except:
+            pass
+    def get(self,request):
+        _tag = request.GET.get('tag')
+        tag = self.get_tag_from_id(_tag)
+        if _tag and tag:
+
+            form = TagForm(instance=tag)
+        else:
+            form = TagForm()
+        return render(request, 'tag_form.html', context={'tag': tag or None, 'form': form})
+
+    def post(self,request):
+        _tag = request.GET.get('tag')
+        tag = self.get_tag_from_id(_tag)
+        if _tag and tag:
+            form = TagForm(request.POST or None)
+            if form.is_valid():
+                tag.name = form.cleaned_data.get('name')
+                tag.explanation = form.cleaned_data.get('explanation')
+                tag.save()
+        else:
+            form = TagForm(request.POST or None)
+            if form.is_valid():
+                form.save(commit=False)
+                Tag.objects.create(
+                    name=form.cleaned_data.get('name'),
+                    explanation=form.cleaned_data.get('explanation'))
+        return redirect('Data:edit_tag')
+
+class Remove_tag(View):
+    @staticmethod
+    def get_tag_from_id(id):
+        try:
+            return Tag.objects.get(id=id)
+        except:
+            pass
+    def post(self,request):
+        try:
+            _tag = request.POST.get('tag_id')
+            tag = self.get_tag_from_id(_tag)
+            tag_name = tag.name
+            tag.delete()
+            return JsonResponse(
+                {"success": True, "message": f"Tag : {tag_name} | DELETED"})
+        except:
+            raise Http404

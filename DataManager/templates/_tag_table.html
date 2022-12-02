@@ -1,0 +1,55 @@
+<table class="table table-sm table-light table-striped ">
+    <thead>
+        <tr>
+            <th scope="col">Row</th>
+            <th scope="col">Name</th>
+            <th scope="col">explanation</th>
+            <th scope="col" class="text-end pe-3">Actions</th>
+        </tr>
+    </thead>
+<tbody>
+    {% for tag in tag_list %}
+        <tr id="tagTableID{{ tag.id }}">
+            <td>{{ tag.id }}</td>
+            <td>{{ tag.name }}</td>
+            <td>{{ tag.explanation }}</td>
+            <td>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-light" href="{% url 'Data:edit_tag' %}?tag={{ tag.id }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <button class="btn btn-light" onclick="remove_tag({{ tag.id }},'{{ tag.name }}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    {% if tag_list %}
+    <input type="text" id="tag-url" value="{% url 'Data:remove_tag' %}" style="display: none">
+
+    <script>
+    function remove_tag(tag_id,tag_name) {
+        var _url = document.getElementById('tag-url').value
+        var api_url = window.location.origin + _url
+
+        if (confirm('Silmek istediğinizden emin misiniz | TAG ->'+tag_name)){
+    $.ajax({
+    url: api_url,
+    type:"POST",
+    dataType: 'json',
+        data:{'csrfmiddlewaretoken':'{{ csrf_token }}','tag_id':tag_id},
+    success:function (response) {
+        var id_name = 'tagTableID' + tag_id.toString()
+        $('#'+id_name).fadeOut('slow')
+    },
+    error: function(response){
+        alert('Başarısız istek')
+    }
+    })
+}
+
+
+
+    }
+    </script>
+
+    {% endif %}
+</tbody>
+</table>

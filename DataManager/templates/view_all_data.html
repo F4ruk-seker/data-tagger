@@ -2,7 +2,10 @@
 {% block title %} All Data List {% endblock %}
 {% block content %}
 
-    <div class="container">
+<div class="container mt-3">
+    <h2 class="heading-text">Veri Tabloları</h2>
+<hr>
+    <div class="overflow-auto" style="max-height: 60vh">
         {% for data in data_list %}
             <div class="card w-100 mt-3">
                 <div class="card-body">
@@ -17,12 +20,22 @@
             </div>
         {% endfor %}
     </div>
-    <hr class="container">
-    <div class="container">
-        <h2>
-            <a class="text-decoration-none text-secondary" href="https://www.linkedin.com/in/faruk-%C5%9Feker-python/">
-                Data Service | F4ruk
-            </a>
-        </h2>
-    </div>
+</div>
+<hr class="container">
+<div class="container">
+<div class="d-flex">
+    <h2 class="heading-text">Tag</h2>
+    <div class="w-100"></div>
+    <a class="btn btn-success rounded-circle text-center justify-content-center align-items-center" style="width: 40px;height: 40px" href="{% url 'Data:edit_tag' %}"><i class="fa-solid fa-plus m-0 m-auto fw-bold"></i></a>
+</div>
+    <hr>
+    {% include '_tag_table.html' %}
+</div>
+<div class="container">
+    <h2>
+        <a class="text-decoration-none text-secondary " href="https://www.linkedin.com/in/faruk-%C5%9Feker-python/">
+            Data Service | {{ request.user }}
+        </a>
+    </h2>
+</div>
 {% endblock %}

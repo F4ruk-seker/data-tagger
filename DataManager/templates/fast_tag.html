@@ -23,9 +23,13 @@
           {% endfor %}
 
     </div>
-    <label class="btn btn-danger btn-lg active">
-        <input type="radio"> Sil
-    </label>
+{% if comment.delete %}
+    <input checked onchange="comment_delete_status_change()" type="checkbox" class="btn-check" name="delete" id="comment_delete_status" autocomplete="off">
+{% else %}
+    <input onchange="comment_delete_status_change()" type="checkbox" class="btn-check" name="delete" id="comment_delete_status" autocomplete="off">
+{% endif %}
+    <label class="btn btn-outline-danger btn-lg" for="comment_delete_status" id="comment_delete_status_label">func Del\Rback</label>
+
   <button type="submit" class="btn btn-success btn-lg mx-5" role="button" id="save">Kaydet</button>
     </div>
 
@@ -41,6 +45,20 @@
 </div>
 
 <script>
+    function comment_delete_status_change(){
+        var comment_delete_status = document.querySelector('#comment_delete_status')
+        var comment_delete_status_label = document.querySelector('#comment_delete_status_label')
+        console.log('chekd '+comment_delete_status.checked)
+        if (comment_delete_status.checked){
+            comment_delete_status_label.innerText = 'Silinmiş'
+
+        }else {
+            comment_delete_status_label.innerText = 'Sil'
+            
+        }
+    }
+    comment_delete_status_change();
+
     window.addEventListener("keydown",tracker,false)
     function tracker(event){
         // console.log(event);

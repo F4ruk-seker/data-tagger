@@ -12,15 +12,19 @@
                     <h5 class="card-title">{{ data.name }}</h5>
                     <p class="card-text">Item Count : {{ data.get_comment_count }}</p>
                     <div class="d-flex" role="group" aria-label="Actions">
+                        <!--
                         <a type="button" class="btn btn-danger me-2" href="/"><i class="fa-solid fa-trash"></i> Delete </a>
                         <a type="button" class="btn btn-success me-2" href="/"><i class="fa-solid fa-download"></i> Download </a>
+                        -->
                         <a type="button" class="btn btn-primary me-2" href='{% url "Data:data_detail" data.slug %}'><i class="fa-solid fa-hashtag"></i> Go Tagging </a>
+                        <a type="button" class="btn btn-info text-light fw-semibold me-2" href='{% url "Data:fast_tag" data.slug 0 %}'><i class="fa-solid fa-gauge-high"></i> Hızlı Tag </a>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
+
 <hr class="container">
 <div class="container">
 <div class="d-flex">

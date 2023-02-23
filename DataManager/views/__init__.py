@@ -6,3 +6,5 @@ from .edit_tag import TagEdit
 from .delete_comment import CommentDelete
 from .delete_tag import Remove_tag
 from .download_data import DownloadData
+from .fast_tagging import FastTag
+

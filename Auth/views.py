@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.shortcuts import Http404
-from django.shortcuts import HttpResponse
 from django.shortcuts import redirect
 
 from django.views.generic import View
@@ -15,7 +14,6 @@ import datetime
 from django.utils import timezone
 from Auth.models import AuthToken
 
-from config.core import SessionConroller
 
 from Auth.forms import TokenForum
 
@@ -25,9 +23,11 @@ class Logout(View):
         logout(request)
         return response
 
-db = None
-class LoginView(View):
 
+class LoginView(View):
+    @staticmethod
+    def get_auth_token(token):
+        pass
     def get(self,request):
         if request.user.is_authenticated:
             # return redirect('Data:data_list')

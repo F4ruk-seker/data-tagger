@@ -10,6 +10,7 @@ import pandas as pd
 from io import BytesIO
 import json
 
+
 class DownloadData(View):
     model = Reviews
     def get(self,request,slug,data_type):

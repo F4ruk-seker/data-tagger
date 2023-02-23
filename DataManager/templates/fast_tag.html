@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!--forum-->
+<div class="container text-light">
+<form method="post">
+        {% csrf_token %}
+        <input type="text" name="id"  value="{{comment.id}}" class="d-none">
+        <input type="text" name="red"  value="None" class="d-none">
+        <input type="text" name="rsult" id="result" value="{{comment.tag.id}}" class="d-none">
+    <div class="jumbotron mx-5 px-5 mt-5 ">
+  <h3 class="display-4 text-dark">row = {{ row }} id = {{ comment.id }}  :  Değer <span class="text-info" > {{ comment.tag.name }}</span></h3>
+  <p class="lead">
+      <textarea class="bg-light text-dark fw-semibold rounded border-info text-light p-1 w-100" rows="6" type="text" name="comment">{{comment.comment}}</textarea>
+  </p>
+  <hr class="my-4 ">
+      <div class="btn-group btn-group-toggle d-block my-3" comment-toggle="buttons">
+          {% for tag in tags %}
+            <label class="btn {{ tag.color }} active">
+                <input type="radio" name="tag" value="{{ tag.id }}" id="{{ tag.id }}"> {{ tag.name }}
+            </label>
+
+          {% endfor %}
+
+    </div>
+    <label class="btn btn-danger btn-lg active">
+        <input type="radio"> Sil
+    </label>
+  <button type="submit" class="btn btn-success btn-lg mx-5" role="button" id="save">Kaydet</button>
+    </div>
+
+        <br>
+<div class="m-auto text-center">
+          <button class="btn btn-success btn-lg mx-5" onclick="afterPage()" id="ap"><</button>
+      <button class="btn btn-success btn-lg mx-5" onclick="nextPage()" id="np">></button>
+</div>
+</form>
+<div class="text-secondary mt-2 text-center">
+    <strong>Listede gezinmek için Yukarı aşağı yön tuşlarını kullanınız <span class="text-danger">/\</span>  <span class="text-success">\/</span></strong>
+</div>
+</div>
+
+<script>
+    window.addEventListener("keydown",tracker,false)
+    function tracker(event){
+        // console.log(event);
+       if (event.key =="ArrowUp"){afterPage();}
+       else if (event.key =="ArrowDown"){nextPage();}
+       else if (event.key =="Enter"){btnSave();}
+    }
+    var result = document.getElementById("result").value;
+    if (result){
+        document.getElementById(result).checked = true;
+    }
+
+    var local_location = window.location.href.split('/')
+    console.log(local_location)
+    var url_param_revized = local_location.slice(0,local_location.length-2)
+
+    function afterPage(){
+        var row = {{row}};
+
+        if (row != 0){
+            row = row-1;
+            window.location.replace(url_param_revized.join('/')+'/'+row);
+        }
+    }
+    function nextPage(){
+        var row = {{row}} + 1 ;
+        var border_row = {{ row_count }};
+
+        if (row >= border_row){
+            alert('Son yorumdasınız');
+        }else {
+            window.location.replace(url_param_revized.join('/')+'/'+row);
+        }
+    }
+    function btnSave(){
+        document.getElementById("save").click();
+    }
+
+</script>
+{% endblock %}

@@ -132,7 +132,7 @@ function set_and_update_tag(id,tag){
     }
     var logBar = document.getElementById('log')
     var updater_field = document.getElementById('modBy'+id)
-    updater_field.innerHTML = `<p class="link-danger">ON CHANGE</p>`;
+    updater_field.innerHTML = `<p class="link-info">ON CHANGE</p>`;
     $.ajax({
     url: apiUrl,
     type:"POST",

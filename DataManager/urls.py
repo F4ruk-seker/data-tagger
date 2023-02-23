@@ -11,4 +11,6 @@ urlpatterns = [
     path('edit_comment/<str:comment_id>',CommentEdit,name='comment_edit'),
     path('<slug:slug>/delete_comment',CommentDelete,name='comment_delete'),
     path('<slug:slug>/download_data/<str:data_type>',DownloadData.as_view(),name='download_data'),
+    path('<slug:slug>/fast/<int:row>/', FastTag.as_view(), name='fast_tag'),
+    # path('<slug:slug>/tag/',FastTag.as_view(),name='fast_tag'),
 ]

@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Comment(models.Model):
     comment = models.TextField(null=True)
     rate = models.IntegerField(null=True,validators=[MinValueValidator(0),
-                                       MaxValueValidator(5)])
+                                       MaxValueValidator(5)],default=0)
     tag = models.ForeignKey('Tag',null=True,on_delete=models.SET_NULL,default=None)
     modified_by = models.ForeignKey('Account.CustomUserModel',on_delete=models.SET_NULL,default=None,null=True)
     last_update = models.DateTimeField(auto_now=True)

@@ -6,7 +6,7 @@ class Reviews(models.Model):
     name = models.TextField(null=True)
     slug = AutoSlugField(populate_from='name')
     explanation = models.TextField(null=True)
-    comments = models.ManyToManyField('Comment',blank=True)
+    comments = models.ManyToManyField('DataManager.Comment',blank=True)
 
     def get_comments(self):
         return self.comments.all()
@@ -16,3 +16,4 @@ class Reviews(models.Model):
 
     def __str__(self):
         return str(self.name)
+

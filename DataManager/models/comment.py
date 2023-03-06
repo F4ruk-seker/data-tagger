@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+# pass
 
 class Comment(models.Model):
     comment = models.TextField(null=True)

@@ -71,7 +71,7 @@
                 {% endif %}
             {% endfor %}
             <td class="border">
-                {% if data.modified_by.id %}
+                {% if data.modified_by %}
                     <div id="modBy{{ data.id }}">
                         <a class="link-dark fw-semibold text-decoration-none">{{ data.get_variables.modified_by }}</a>
                     </div>

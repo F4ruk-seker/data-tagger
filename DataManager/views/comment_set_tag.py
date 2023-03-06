@@ -21,8 +21,10 @@ def set_data_tag(request,slug:str,comment_id):
 
                     return JsonResponse({"success":True,"message":f"Row : {comment.id} |-> {tag.name}","update_by":request.user.username})
                 else:
+
                     raise shortcuts.Http404(json.dumps({"success":False,"message":f"Tag 404 {request.POST.get('tag')}"}))
-            except:
+            except Exception as e:
+                print(e)
                 raise shortcuts.Http404('document not found')
     else:
         return shortcuts.redirect('Auth:login')

@@ -7,9 +7,10 @@ class Comment(models.Model):
     rate = models.IntegerField(null=True,validators=[MinValueValidator(0),
                                        MaxValueValidator(5)],default=0)
     tag = models.ForeignKey('Tag',null=True,on_delete=models.SET_NULL,default=None)
-    modified_by = models.ForeignKey('Account.CustomUserModel',on_delete=models.SET_NULL,default=None,null=True)
-    last_update = models.DateTimeField(auto_now=True)
 
+    modified_by = models.ForeignKey('Account.CustomUserModel',on_delete=models.SET_NULL,default=None,null=True,blank=True)
+
+    last_update = models.DateTimeField(auto_now=True)
     delete = models.BooleanField(default=False)
 
     def get_variables(self):

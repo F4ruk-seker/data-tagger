@@ -86,6 +86,7 @@
                 <select id="{{ data.id }}"  class="form-select form-select-sm" style="min-width: 100px" onchange='set_and_update_tag(id=this.id,this.value)'>
                     {% if data.tag %}
                         <option class="text-success fw-semibold" value="-1">{{ data.tag }}</option>
+                        <hr>
                     {% else %}
                         <option class="text-danger" value="-1">---TAG---</option>
                     {% endif %}
@@ -122,14 +123,14 @@
 <div class="container text-center mb-2"><strong>F4ruk</strong></div>
 <script>
 function set_and_update_tag(id,tag){
-    var apiUrl = "";
+    if (tag !== '-1'){
+        var apiUrl = "";
     var url = window.location.href.toString().replace('?show_deleted=true','')
     if (url.endsWith('/')){
          apiUrl = url + 'set_tag/'+ id
     }else {
          apiUrl = url + '/set_tag/'+ id
-
-    }
+   }
     var logBar = document.getElementById('log')
     var updater_field = document.getElementById('modBy'+id)
     updater_field.innerHTML = `<p class="link-info">ON CHANGE</p>`;
@@ -146,11 +147,14 @@ function set_and_update_tag(id,tag){
     },
     error: function(response){
         logBar.innerHTML += response.message.toString() + "<br>"
-    }
-    })
-
+    }})
     logBar.scrollTop = logBar.scrollHeight
     {#logBar#}
+    }else {
+        console.log('err : Varsayılan seçilemez')
+    }
+
+
 }
 
 </script>

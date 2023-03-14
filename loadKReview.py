@@ -5,10 +5,10 @@ from DataManager.models import Tag
 import json
 #
 table = Reviews.objects.create(
-    name='Yorumlar',
+    name='Köfteci yusuf',
     explanation='fixing : utf-8-tr'
 )
-reviews = open('comments.json','r',encoding='utf-8')
+reviews = open('review.json','r',encoding='utf-8')
 reviews = json.load(reviews)
 
 # repeating data
@@ -18,9 +18,10 @@ remaining_count = len(reviews)
 for _ in reviews:
     counter += 1
 
-    tag_name = _.get('result')
-    comment = _.get('comment')
-
+#     tag_name = _.get('result')
+    comment = _.get('text')
+    rate = _.get('rate')
+#
     if len(str(counter))==1:
         print(f'| 0000{counter}/{remaining_count} | @ {comment[:43]}')
     if len(str(counter))==2:
@@ -29,8 +30,7 @@ for _ in reviews:
         print(f'| 0{counter}/{remaining_count} | @ {comment[:43]}')
     if len(str(counter))>=4:
         print(f'| {counter}/{remaining_count} | @ {comment[:43]}')
-    #
-    tag = Tag.objects.get(name=tag_name)
-    table.comments.create(comment=comment,tag=tag)
-
-print(f'{"#"*25} - END - {"#"*25}')
+#     tag = Tag.objects.get(name=tag_name)
+    table.comments.create(comment=comment,rate=rate)
+#
+# print(f'{"#"*25} - END - {"#"*25}')

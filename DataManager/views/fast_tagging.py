@@ -44,7 +44,10 @@ class FastTag(View):
                 raise shortcuts.Http404('Bu row dan sonra yorum yok')
             else:
                 comment = review.get_comments()[row]
-                return shortcuts.render(request, 'fast_tag.html',context={'tags':self.get_colored_tags(),'comment':comment,'row':row,'row_count':row_count})
+                return shortcuts.render(request, 'fast_tag.html',
+                                        context={'tags':self.get_colored_tags(),
+                                                 'comment':comment,'row':row,
+                                                 'row_count':row_count,"review_stats":review.get_stats()})
 
         else:
             raise shortcuts.Http404('Data Sınıfı Bulunamadı')

@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 # pass
 
+
 class Comment(models.Model):
     comment = models.TextField(null=True)
     rate = models.IntegerField(null=True,validators=[MinValueValidator(0),
@@ -25,3 +26,4 @@ class Comment(models.Model):
         if self.comment:
             return f'{self.comment[:150]}...'
         return "Err paresed"
+

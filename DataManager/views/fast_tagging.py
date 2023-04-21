@@ -43,7 +43,7 @@ class FastTag(View):
             if row >= row_count:
                 raise shortcuts.Http404('Bu row dan sonra yorum yok')
             else:
-                comment = review.get_comments()[row]
+                comment = review.get_comments().order_by("id")[row]
                 return shortcuts.render(request, 'fast_tag.html',
                                         context={'tags':self.get_colored_tags(),
                                                  'comment':comment,'row':row,

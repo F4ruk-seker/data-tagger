@@ -19,7 +19,7 @@ numpy==1.23.5
 openpyxl==3.0.10
 packaging==21.3
 pandas==1.5.2
-Pillow==10.2.0
+Pillow==10.3.0
 psycopg2==2.9.5
 pymongo==4.3.3
 pyparsing==3.0.9
